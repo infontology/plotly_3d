@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kodstund Mat</title>
+<link rel="stylesheet" href="styles.css" type="text/css">
+
+
+
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+       
+
+   
+
+</head>
+
+<body>
+
+<!--
+<script async src="//jsfiddle.net/infontology/my2w8L0v/2/embed/html,result/"></script>
+-->
+
+ <!--<div id="matdata">Laddar mat</div>-->
+   <div id="myDiv" style="width:650px;height:450px"></div>
+        
+
+    <script>
+        //
+         //
+         //Ladda busstider
+
+   var proteinArray = [];
+   var fettArray = [];
+ var kolhydratArray = [];
+ var nameArray = [];
+
+var livsmedelsArray = [43, 654, 1236, 45, 1232, 1237];
+console.log(livsmedelsArray.length);
+
+//var q = 0;
+
+    for (i=0;i<livsmedelsArray.length;i++){
+       // console.log(i);
+                
+        var xmlhttp1 = new XMLHttpRequest();
+         //var url = "static.json";
+        var url = "mat.php?n="+livsmedelsArray[i].toString();
+        xmlhttp1.onreadystatechange = function() {
+            if(xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                var myArr = JSON.parse(xmlhttp1.responseText);
+                 // console.log("nu!");
+  
+                parsaMat(myArr, i);
+                //console.log(xmlhttp.readyState);
+            }
+        }
+        xmlhttp1.open("GET", url, false);
+
+
+       xmlhttp1.send();
+         
+         
+
+
+      }
+
+      
+         //Visa tiden
+       
+          //
+  
+        function parsaMat(arr, j) {
+            
+      
+
+            var i;
+            var naring = [];
+           // naring = arr.nutrientValues;
+           // console.log(arr.name);
+            //console.log(arr.number);
+            //console.log(arr.nutrientValues.protein);
+            //console.log(j);
+
+            proteinArray[j]=arr.nutrientValues.protein;
+            fettArray[j]=arr.nutrientValues.fat;
+            kolhydratArray[j]=arr.nutrientValues.carbohydrates;
+            nameArray[j]=arr.name;
+            var html = "";
+            
+            for (i=0;i<livsmedelsArray.length;i++){
+                html += proteinArray[i];
+            }
+             
+            //console.log(tur[0]);
+            
+            
+            html += "Fett " + arr.nutrientValues.fat + "<br />";
+            html += "Protein " + arr.nutrientValues.protein  + "<br />";
+            html += "Kolhydrater " + arr.nutrientValues.carbohydrates;
+
+                //console.log(i);
+                //console.log(html + "hej");
+            
+
+            //document.getElementById("matdata").innerHTML = html;
+        }        
+    </script>
+
+    <script>
+        
+
+
+
+     /*  Plotly.d3.csv('3d-scatter.csv', function(err, rows){
+      function unpack(rows, key) {
+          return rows.map(function(row) 
+          { return row[key]; });
+      }
+      */
+
+var trace1 = {
+  x: proteinArray,
+  y: fettArray,
+  z: kolhydratArray,
+  mode: 'markers',
+  text: nameArray,
+  marker: {
+    size: 12,
+    line: {
+      color: 'rgba(217, 217, 217, 0.14)',
+      width: 0.5
+    },
+    opacity: 0.8
+  },
+  type: 'scatter3d'
+};
+
+
+
+    
+/*var trace2 = {
+  x:unpack(rows, 'x2'),  y: unpack(rows, 'y2'), z: unpack(rows, 'z2'), 
+  mode: 'markers',
+  marker: {
+    color: 'rgb(127, 127, 127)',
+    size: 12,
+    symbol: 'circle',
+    line: {
+      color: 'rgb(256, 0, 0)',
+      width: 1
+    },
+    opacity: 0.9
+  },
+  type: 'scatter3d'
+};*/
+var data = [trace1];
+var layout = {
+    title: "Simple example",
+    xaxis: {title: "Life Expectancy",
+        showgrid: true,
+        range: [0, 100],
+        gridwidth: 3},
+    margin: {
+        l: 0,
+        r: 0,
+        b: 50,
+        t: 0
+    },
+
+
+};
+Plotly.newPlot('myDiv', data, layout);
+//});
+
+    </script>
+
+
+</body>
+
+</html>
+
